@@ -1,0 +1,246 @@
+package fr.insarouen.asi.prog.asiaventure.elements.vivants;
+
+import fr.insarouen.asi.prog.asiaventure.elements.Entite;
+import fr.insarouen.asi.prog.asiaventure.Monde;
+import fr.insarouen.asi.prog.asiaventure.elements.structure.Piece;
+import fr.insarouen.asi.prog.asiaventure.elements.objets.Objet;
+import fr.insarouen.asi.prog.asiaventure.NomDEntiteDejaUtiliseDansLeMondeException;
+import fr.insarouen.asi.prog.asiaventure.elements.vivants.ObjetNonPossedeParLeVivantException;
+import fr.insarouen.asi.prog.asiaventure.elements.structure.ObjetAbsentDeLaPieceException;
+import fr.insarouen.asi.prog.asiaventure.elements.structure.ObjetNonDeplacableDeLaPieceException;
+
+/**
+* Classe representant un vivant, extension de la classe Entite.
+*
+* @author lavigne_paul
+*
+*/
+
+
+public abstract class Vivant extends Entite {
+  private String nom;
+  private Monde monde;
+  private Objet[] objets;
+  private Piece piece;
+  private int pointVie, pointForce;
+
+  //constructeur
+
+/**
+* Constructeur Vivant de la classe de meme nom.
+*
+* @param _nom
+*	Le nom du vivant a creer.
+* @param _monde
+*	Le monde auquel appartiendra le vivant.
+*@param _pointVie
+*	Le nombre de points de vie du vivant a creer.
+*@param _pointForce
+*	Le nombre de points de force du vivant a creer.
+*@param _piece
+*	La piece dans laquelle se trouvera le vivant.
+*@param _objets
+*	Les objets de l'inventaire du vivant a creer.
+*
+*/
+
+  public Vivant(String _nom, Monde _monde, int _pointVie, int _pointForce, Piece _piece, Objet... _objets) throws NomDEntiteDejaUtiliseDansLeMondeException {
+	super(_nom,_monde);
+	pointVie=_pointVie;
+	pointForce=_pointForce;
+	piece=_piece;
+	objets=_objets;
+	piece.entrer(this);
+  } 
+
+  // methodes
+
+/**
+* Methode estMort de la classe Vivant.
+*
+*@return Un Booleen indiquant si le vivant courant est mort ou non, c'est-a-dire si il lui reste des pointVie.
+*
+*/
+
+  public boolean estMort() {
+	return(pointVie<1);
+  }
+
+/**
+* Methode getPointVie de la classe Vivant.
+*
+*@return Un Entier indiquant le nombre de points de vie (restant) du vivant courant.
+*
+*/
+
+  public int getPointVie() {
+	return pointVie;
+  }
+
+/**
+* Methode getPointForce de la classe Vivant.
+*
+*@return Un Entier indiquant le nombre de points de force (restant) du vivant courant.
+*
+*/
+
+  public int getPointForce() {
+	return pointForce;
+  }
+
+/**
+* Methode getPiece de la classe Vivant.
+*
+*@return La Piece dans laquelle se trouve le vivant courant.
+*
+*/
+
+  public Piece getPiece() {
+	return piece;
+  }
+
+/**
+* Methode possede de la classe Vivant.
+*
+*@param nomObj
+*	Le nom de l'objet dont on verifie si le vivant le possede dans son inventaire.
+*@return Un Booleen indiquant si l'objet est present ou non dans l'inventaire du vivant.
+*
+*/
+
+  public boolean possede(String nomObj) {
+	boolean res=false;
+	int i;
+
+	for(i=0;i<objets.length;i++) {
+		if(objets[i].getNom().equals(nomObj)) {
+			res=true;
+		}
+	}
+	return res;
+  }
+
+/**
+* Methode possede de la classe Vivant.
+*
+*@param obj
+*	L'objet dont on verifie si le vivant le possede dans son inventaire.
+*@return Un Booleen indiquant si l'objet est present ou non dans l'inventaire du vivant.
+*
+*/
+
+  public boolean possede(Objet obj) {
+	return possede(obj.getNom());
+  }
+
+/**
+* Methode deposer de la classe Vivant.
+*
+*@param nomObj
+*	Le nom de l'objet que l'on va retirer de l'inventaire du vivant et depose dans la piece.
+*
+*/
+
+  public void deposer(String nomObj) throws ObjetNonPossedeParLeVivantException{
+	int j=0;
+	Objet obj=null;
+	
+	if(!(this.possede(nomObj))) {
+		throw new ObjetNonPossedeParLeVivantException("L'objet "+nomObj+" est absent de l'inventaire du vivant "+getNom()+".");
+	}
+
+	Objet[] tmp=new Objet[objets.length-1];
+
+	for(int i=0;i<this.objets.length;i++) {
+		if(this.objets[i].getNom().equals(nomObj)) {
+			obj=this.objets[i];
+			i++;
+		}
+		if(i<this.objets.length){
+			tmp[j]=this.objets[i];
+			j++;
+		}
+	
+		this.objets=tmp;
+		piece.deposer(obj);
+  }
+
+/**
+* Methode deposer de la classe Vivant.
+*
+*@param obj
+*	L'objet que l'on va retirer de l'inventaire du vivant et depose dans la piece.
+*
+*/
+
+  public void deposer(Objet obj) throws ObjetNonPossedeParLeVivantException{
+	deposer(obj.getNom());
+  }
+
+/**
+* Methode prendre de la classe Vivant.
+*
+*@param nomObj
+*	Le nom de l'objet que l'on va prendre dans la piece et ajouter a l'inventaire du vivant.
+*
+*/
+
+  public void prendre(String nomObj) throws ObjetAbsentDeLaPieceException, ObjetNonDeplacableDeLaPieceException{
+	int i;
+	Objet obj;
+	Objet[] tmp=new Objet[objets.length+1];
+
+	if(piece.contientObjet(nomObj)) {
+		obj=piece.retirer(nomObj);
+
+		for(i=0;i<objets.length;i++){
+			tmp[i]=objets[i];
+		}
+
+		tmp[objets.length]=obj;
+		objets=tmp;
+	}
+  }
+
+/**
+* Methode prendre de la classe Vivant.
+*
+*@param obj
+*	L'objet que l'on va prendre dans la piece et ajouter a l'inventaire du vivant.
+*
+*/
+
+  public void prendre(Objet obj) throws ObjetAbsentDeLaPieceException, ObjetNonDeplacableDeLaPieceException{
+	prendre(obj.getNom());
+  }
+
+/**
+* Methode toString de la classe Vivant.
+*
+*@return La chaîne de caractere decrivant le vivant (indiquant tous ses attributs).
+*
+*/
+
+  public String toString() {
+	int i;
+	StringBuilder sb=new StringBuilder();
+
+	sb.append("Le vivant nomme ");
+	sb.append(getNom());
+	sb.append(" possede ");
+	sb.append(getPointVie());
+	sb.append(" point(s) de vie et ");
+	sb.append(getPointForce());
+	sb.append(" point(s) de force. Il se trouve dans le monde ");
+	sb.append(getMonde().getNom());
+	sb.append(" et plus precisement dans la piece ");
+	sb.append(getPiece().getNom());
+	sb.append(". Enfin, son inventaire est constitue des objets suivants :\n");
+
+	for(i=0;i<objets.length;i++) {
+		sb.append(objets[i].getNom());
+		sb.append("\n");
+	}
+	return sb.toString();
+  }
+}

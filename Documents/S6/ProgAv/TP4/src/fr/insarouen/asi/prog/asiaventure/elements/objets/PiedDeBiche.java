@@ -1,0 +1,45 @@
+package fr.insarouen.asi.prog.asiaventure.elements.objets;
+
+import fr.insarouen.asi.prog.asiaventure.Monde;
+import fr.insarouen.asi.prog.asiaventure.elements.objets.Objet;
+import fr.insarouen.asi.prog.asiaventure.NomDEntiteDejaUtiliseDansLeMondeException;
+
+/**
+* Classe representant un pied de biche.
+*
+* @author lavigne_paul
+*
+*/
+
+public class PiedDeBiche extends Objet {
+
+  //constructeur
+
+/**
+* Constructeur PiedDeBiche de la classe de meme nom.
+*
+* @param nom
+*	Le nom du PiedDeBiche a creer.
+* @param monde
+*	Le monde auquel appartiendra le pied de biche.
+*
+*/
+
+  public PiedDeBiche(String nom, Monde monde) throws NomDEntiteDejaUtiliseDansLeMondeException{
+	super(nom,monde);
+  }
+
+  //methodes
+
+/**
+* Methode estDeplacable de la classe PiedDeBiche.
+*
+* @return Un booleen indiquant si un pied de biche est deplaçable, par defaut Vrai.
+*
+*/
+
+  public boolean estDeplacable() {
+	return true;	
+  }
+
+}

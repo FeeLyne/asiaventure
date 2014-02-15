@@ -1,0 +1,38 @@
+package fr.insarouen.asi.prog.asiaventure;
+
+import fr.insarouen.asi.prog.asiaventure.ASIAventureException;
+import fr.insarouen.asi.prog.asiaventure.Monde;
+
+/**
+* Classe representant les exceptions de la classe Monde.
+*
+* @author lavigne_paul
+*
+*/
+
+public class MondeException extends ASIAventureException {
+  private String msg;
+
+  //constructeurs
+
+/**
+* Constructeur MondeException de la classe de meme nom.
+*
+*/
+
+  public MondeException(){
+	super();
+  }
+
+/**
+* Constructeur MondeException de la classe de meme nom.
+*
+* @param _msg
+*	Le message envoye dans l'exception.
+*
+*/
+
+  public MondeException(String msg){
+	super(msg);
+  }
+}

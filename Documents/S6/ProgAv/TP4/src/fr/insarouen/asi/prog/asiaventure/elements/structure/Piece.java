@@ -1,0 +1,343 @@
+package fr.insarouen.asi.prog.asiaventure.elements.structure;
+
+import fr.insarouen.asi.prog.asiaventure.elements.structure.ElementsStructurel;
+import fr.insarouen.asi.prog.asiaventure.Monde;
+import fr.insarouen.asi.prog.asiaventure.elements.Entite;
+import fr.insarouen.asi.prog.asiaventure.elements.objets.Objet;
+import fr.insarouen.asi.prog.asiaventure.elements.vivants.Vivant;
+import fr.insarouen.asi.prog.asiaventure.elements.structure.VivantAbsentDeLaPieceException;
+import fr.insarouen.asi.prog.asiaventure.elements.structure.ObjetAbsentDeLaPieceException;
+import fr.insarouen.asi.prog.asiaventure.elements.structure.ObjetNonDeplacableDeLaPieceException;
+import fr.insarouen.asi.prog.asiaventure.NomDEntiteDejaUtiliseDansLeMondeException;
+
+
+/**
+* Classe representant une piece, extension de la classe ElementsStructurel.
+*
+* @author lavigne_paul
+*
+*/
+
+public class Piece extends ElementsStructurel{
+  private String nom;
+  private Monde monde;
+  private Objet[] objets;
+  private Vivant[] vivants;
+
+  //constructeur
+
+/**
+* Constructeur Piece de la classe de meme nom.
+*
+* @param _nom
+*	Le nom de la piece a creer.
+* @param _monde
+*	Le monde auquel appartiendra la piece.
+* @param _objets
+*	Les objets presents dans la piece a creer.
+* @param _vivants
+*	Les vivants presents dans la piece a creer.
+*
+*/
+
+  public Piece(String _nom, Monde _monde, Objet[] _objets, Vivant... _vivants) throws NomDEntiteDejaUtiliseDansLeMondeException{
+	super(_nom,_monde);
+	objets=_objets;
+	vivants=_vivants;
+  } 
+
+  //methodes
+
+
+/**
+* Methode contientObjet de la classe Piece.
+*
+* @param nomObj
+*	Le nom de l'objet pour lequel on verifie la presence dans la piece courante.
+*@return Un booleen indiquant si l'objet est present ou non dans la piece.
+*
+*/
+
+  public boolean contientObjet(String nomObj) {
+	boolean res=false;
+	int i;
+
+	for(i=0;i<objets.length;i++) {
+		if(objets[i].getNom().equals(nomObj)) {
+			res=true;
+		}
+	}
+	return res;
+
+  }
+
+/**
+* Methode contientObjet de la classe Piece.
+*
+* @param obj
+*	L'objet pour lequel on verifie la presence dans la piece courante.
+*@return Un booleen indiquant si l'objet est present ou non dans la piece.
+*
+*/
+
+  public boolean contientObjet(Objet obj) {
+	return contientObjet(obj.getNom());
+  }
+
+/**
+* Methode getObjet de la classe Piece.
+*
+* @param nomObj
+*	Le nom de l'objet que l'on va chercher dans la piece et donner en sortie.
+*@return L'Objet cherche (toujours contenu dans la piece).
+*
+*/
+
+  public Objet getObjet(String nomObj) {
+	int i;
+	Objet res=null;
+
+	for(i=0;i<objets.length;i++){
+		if(objets[i].getNom().equals(nomObj)){
+			res=objets[i];
+		}
+	}
+	return res;
+  }
+
+
+/**
+* Methode contientVivant de la classe Piece.
+*
+* @param nomViv
+*	Le nom du vivant pour lequel on verifie la presence dans la piece courante.
+*@return Un booleen indiquant si le vivant est present ou non dans la piece.
+*
+*/
+
+  public boolean contientVivant(String nomViv) {
+	boolean res=false;
+	int i;
+
+	for(i=0;i<vivants.length;i++) {
+		if(vivants[i].getNom().equals(nomViv)) {
+			res=true;
+		}
+	}
+	return res;
+  }
+
+/**
+* Methode contientVivant de la classe Piece.
+*
+* @param viv
+*	Le vivant pour lequel on verifie la presence dans la piece courante.
+*@return Un booleen indiquant si le vivant est present ou non dans la piece.
+*
+*/
+
+  public boolean contientVivant(Vivant viv) {
+	return contientVivant(viv.getNom());
+  }
+
+/**
+* Methode getVivant de la classe Piece.
+*
+* @param nomViv
+*	Le nom du vivant que l'on va chercher dans la piece et donner en sortie.
+*@return Le Vivant cherche (toujours contenu dans la piece).
+*
+*/
+
+  public Vivant getVivant(String nomViv) {
+	int i;
+	Vivant res=null;
+
+	for(i=0;i<vivants.length;i++){
+		if(vivants[i].getNom().equals(nomViv)){
+			res=vivants[i];
+		}
+	}
+	return res;
+  }
+
+/**
+* Methode deposer de la classe Piece.
+*
+*@param obj
+*	L'objet que l'on va deposer dans la piece courante.
+*
+*/
+
+  public void deposer(Objet obj) {
+	int i;
+	Objet[] tmp=new Objet[objets.length+1];
+
+	for(i=0;i<objets.length;i++){
+		tmp[i]=objets[i];
+	}
+
+	tmp[objets.length]=obj;
+	objets=tmp;
+  }
+
+/**
+* Methode retirer de la classe Piece.
+*
+*@param nomObj
+*	Le nom de l'objet que l'on va retirer de la piece courante.
+*@return L'Objet retire de la piece.
+*
+*/
+
+   public Objet retirer(String nomObj) throws ObjetAbsentDeLaPieceException, ObjetNonDeplacableDeLaPieceException{
+	int j=0;
+	Objet res=null;
+	Objet[] tmp=new Objet[objets.length-1];
+
+	if(!(this.contientObjet(nomObj))) {
+		throw new ObjetAbsentDeLaPieceException("L'objet "+nomObj+" est absent de la pièce "+getNom()+".");
+	}
+	if(!(getObjet(nomObj).estDeplacable())){
+		throw new ObjetNonDeplacableDeLaPieceException("L'objet "+nomObj+" n'est pas déplaçable de la pièce "+getNom()+".");
+	}
+
+	for(int i=0;i<objets.length;i++) {
+		if(objets[i].getNom().equals(nomObj)) {
+			res=objets[i];
+			i++;
+		}
+		if(i<objets.length){
+			tmp[j]=objets[i];
+			j++;
+		}
+	}
+	objets=tmp;	
+	return res;
+  }
+
+/**
+* Methode retirer de la classe Piece.
+*
+*@param obj
+*	L'objet que l'on va retirer de la piece courante.
+*@return L'Objet retire de la piece.
+*
+*/
+
+  public Objet retirer(Objet obj) throws ObjetAbsentDeLaPieceException, ObjetNonDeplacableDeLaPieceException{
+	if(!(this.contientObjet(obj))) {
+		throw new ObjetAbsentDeLaPieceException("L'objet "+obj.getNom()+" est absent de la pièce "+getNom()+".");
+	}
+	if(!(obj.estDeplacable())){
+		throw new ObjetNonDeplacableDeLaPieceException("L'objet "+obj.getNom()+" n'est pas déplaçable de la pièce "+getNom()+".");
+	}
+
+	return retirer(obj.getNom());
+  }
+
+/**
+* Methode entrer de la classe Piece.
+*
+*@param viv
+*	Le vivant qui entre dans la piece courante (que l'on va ajouter a vivants).
+*
+*/
+
+  public void entrer(Vivant viv) {
+	int i;
+	Vivant[] tmp=new Vivant[vivants.length+1];
+
+	for(i=0;i<vivants.length;i++){
+		tmp[i]=vivants[i];
+	}
+
+	tmp[vivants.length]=viv;
+	vivants=tmp;
+  }
+
+/**
+* Methode sortir de la classe Piece.
+*
+*@param nomViv
+*	Le nom du vivant qui va sortir de la piece courante (que l'on va supprimer de vivants).
+*@return Le Vivant qui est sorti de la piece.
+*/
+
+  public Vivant sortir(String nomViv) throws VivantAbsentDeLaPieceException{
+	int j=0;
+	Vivant res=null;
+	Vivant[] tmp=new Vivant[vivants.length-1];
+
+	if(!(this.contientVivant(nomViv))) {
+		throw new VivantAbsentDeLaPieceException("Le vivant "+nomViv+" est absent de la pièce "+getNom()+".");
+	}
+
+	for(int i=0;i<this.vivants.length;i++) {
+		if(this.vivants[i].getNom().equals(nomViv)) {
+			res=vivants[i];
+			i++;
+		}
+		if(i<this.vivants.length){
+			tmp[j]=this.vivants[i];
+			j++;
+		}
+	}
+	this.vivants=tmp;
+	
+	return res;	
+  }
+
+/**
+* Methode sortir de la classe Piece.
+*
+*@param viv
+*	Le vivant qui va sortir de la piece courante (que l'on va supprimer de vivants).
+*@return Le Vivant qui est sorti de la piece.
+*
+*/
+
+  public Vivant sortir(Vivant viv) throws VivantAbsentDeLaPieceException{
+	if(!(this.contientVivant(viv))) {
+		throw new VivantAbsentDeLaPieceException("Le vivant "+viv.getNom()+" est absent de la pièce "+getNom()+".");
+	}
+	return sortir(viv.getNom());
+  }
+
+
+/**
+* Methode toString de la classe Piece.
+*
+*@return La chaine de caracteres decrivant la piece courante.
+*
+*/
+
+  public String toString() {
+	StringBuilder sb=new StringBuilder();
+	int i,j;
+
+	sb.append("La piece nommee ");
+	sb.append(getNom());
+	sb.append(" appartient au monde ");
+	sb.append(getMonde().getNom());
+	sb.append(" et contient les objets suivants :\n");
+
+	if(objets.length>0) {
+		for(i=0;i<objets.length;i++) {
+			sb.append(objets[i].getNom());
+			sb.append("\n");
+		}
+	}
+
+	sb.append("Ainsi que les vivants suivants :\n");
+
+	if(vivants.length>0) {
+		for(j=0;j<vivants.length;j++) {
+			sb.append(vivants[j].getNom());
+			sb.append("\n");
+		}
+	}
+
+	return sb.toString();
+  }
+}

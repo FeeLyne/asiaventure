@@ -1,0 +1,267 @@
+package fr.insarouen.asi.prog.asiaventure;
+
+import fr.insarouen.asi.prog.asiaventure.elements.Entite;
+import fr.insarouen.asi.prog.asiaventure.elements.structure.ElementsStructurel;
+import fr.insarouen.asi.prog.asiaventure.Monde;
+import fr.insarouen.asi.prog.asiaventure.elements.objets.Objet;
+import fr.insarouen.asi.prog.asiaventure.elements.objets.PiedDeBiche;
+import fr.insarouen.asi.prog.asiaventure.elements.structure.Piece;
+import fr.insarouen.asi.prog.asiaventure.elements.vivants.Vivant;
+import fr.insarouen.asi.prog.asiaventure.NomDEntiteDejaUtiliseDansLeMondeException;
+import fr.insarouen.asi.prog.asiaventure.elements.structure.VivantAbsentDeLaPieceException;
+import fr.insarouen.asi.prog.asiaventure.elements.structure.ObjetAbsentDeLaPieceException;
+import fr.insarouen.asi.prog.asiaventure.elements.structure.ObjetNonDeplacableDeLaPieceException;
+import fr.insarouen.asi.prog.asiaventure.elements.vivants.ObjetNonPossedeParLeVivantException;
+
+/**
+* Classe Main permettant de tester notre code.
+*
+* @author lavigne_paul
+*
+*/
+
+public class ClassMain {
+
+  public static void main(String[] args){
+	//Initialisation du monde.
+	Monde m=new Monde("Terre"); 
+
+
+	//--------Mise en commentaire des tests des TP précédents qui sont passés.----------//
+/*
+	//Initialisation des entités.
+	Entite e1=new Entite("Joueur",m) {}; //Permet en même temps de verifier ajouter() de la classe Monde.
+	Entite e2=new Entite("Ennemi",m) {};
+	//Initialisation d'un elément structurel.
+	ElementsStructurel es=new ElementsStructurel("Arbre",m) {};
+	//Initialisation des objets.
+	Objet voiture=new Objet("Voiture",m) {public boolean estDeplacable() {return false;}};
+	Objet jouet=new Objet("Jouet",m) {public boolean estDeplacable() {return true;}};
+	Objet nourr=new Objet("Nourriture",m) {public boolean estDeplacable() {return true;}};
+	Objet eau=new Objet("Eau",m) {public boolean estDeplacable() {return true;}};
+	//Inventaires vides d'objets des vivants et des pièces.
+	Objet[] obj1=new Objet[0]; 
+	Objet[] obj2=new Objet[0];
+	Objet[] obj3=new Objet[0];
+	Objet[] obj4=new Objet[0];
+	Objet[] obj5=new Objet[0];
+	Objet[] obj6=new Objet[0];
+	//Inventaires vides de vivants des pièces.
+	Vivant[] viv1=new Vivant[0];
+	Vivant[] viv2=new Vivant[0];
+	//Initialisation des pièces.
+	Piece salon=new Piece("Salon",m,obj1,viv1); 
+	Piece chambre=new Piece("Chambre",m,obj5,viv2);
+	//Initialisation des vivants.
+	Vivant chat=new Vivant("Chat",m,10,15,salon,obj2) {}; 
+	Vivant chien=new Vivant("Chien",m,5,12,salon,obj3) {};
+	Vivant souris=new Vivant("Souris",m,2,3,chambre,obj4) {};
+	Vivant corps=new Vivant("Corps",m,0,0,chambre,obj6) {};
+	//Vivants qui serviront à contenir la sortie des méthodes sortir de la classe Piece.
+	Vivant ch,sou; 
+	//Objets qui serviront à contenir la sortie de la méthode retirer de la classe Piece.
+	Objet jou,voi;
+	//String pour les tests avec toString.
+	String s1,s2,s3,s4,s5,s6;
+ 	// String pour les tests avec des booléens.
+	String test1="KO"; 
+	String test2="KO";
+	String test3="KO";
+	String test4="KO";
+	String test5="KO";
+	String test6="KO";
+	String test7="KO";
+
+	//Les toString suivants permettent en même temps de vérifier les getNom() de Monde et Entite.
+	s1=e1.toString(); 
+	s2=m.toString(); 
+	s3=es.toString();
+	
+	//Le test suivant doit montrer que l'entité e1 est nommée Joueur et appartient au monde Terre.
+	System.out.println("Résultat du toString d'Entite :\n"+s1);
+
+	//Le test suivant doit montrer que le monde Terre possède les entités Joueur, Ennemi, Arbre, Arme, Jouet, Nourriture, Eau, Salon, Chambre, Chat, Chien, Souris et Corps.
+	System.out.println("Résultat du toString de Monde :\n"+s2);
+
+	//Le test suivant doit montrer que l'élément structurel es est nommé Arbre et appartient au monde Terre.
+	System.out.println("Résultat du toString de ElementsStructurel :\n"+s3);
+
+	if(m.getEntite("Ami")==null) { //Test de getEntite() avec une entité non présente dans le monde.
+		test1="OK";
+	}
+
+	if(m.getEntite("Ennemi").getNom()=="Ennemi") { //Test de getEntite() avec une entité présente dans le monde.
+		test1=test1+" OK";
+	}
+
+	System.out.println("Test de getEntite de Monde : "+test1);
+	
+	
+	if(!(e1.equals(e2))) { //Test de equals avec deux entités non égales.
+		test2="OK";
+	}
+
+	if(e1.equals(e1)) { //Test de equals avec deux entités égales.
+		test2=test2+" OK";
+	}
+
+	System.out.println("Test de equals de Entite : "+test2);
+
+	if(!(voiture.estDeplacable())) { //Test de estDeplacable avec un objet non déplaçable.
+		test3="OK";
+	}
+
+	if(jouet.estDeplacable()) { //Test de estDeplacable avec un objet déplaçable.
+		test3=test3+" OK";
+	}
+	
+	System.out.println("Test de estDeplacable pour Objet : "+test3);
+
+
+		// ****** TESTS du TP2 pour Piece et Vivant ****** //
+
+
+	//Ajout de Eau, Nourriture et Jouet aux objets contenus dans la pièce Salon.
+	salon.deposer(eau);
+	salon.deposer(nourr);
+	salon.deposer(jouet);
+
+	s4=salon.toString();
+	//Le test suivant doit montrer que la pièce Salon possède les objets Eau, Nourriture et Jouet ainsi que les vivants Chat et Chien.
+	System.out.println("TEST deposer et toString pour Piece :\n"+s4);
+
+
+	//Ajout de l'objet Nourriture à l'inventaire du vivant Chat et de Jouet à celui de Chien.
+	chat.prendre(nourr);
+	chien.prendre(jouet);
+
+	s5=salon.toString()+"\n"+chat.toString()+"\n"+chien.toString();
+	//Le test suivant doit montrer que le vivant Chat possède 10pts de vie, 15pts de force et l'objet Nourriture; le vivant Chien possède 5pts de vie et 12pts de force et l'objet Jouet; la pièce Salon ne contient plus que l'objet Eau et les vivants Chat et Chien.
+	System.out.println("TEST prendre et toString pour Vivant (et vérification du contenu de la pièce) :\n"+s5);
+
+
+	//Suppression de l'objet Jouet de l'inventaire du vivant Chien, ajout de Jouet à la pièce Salon et suppression de l'objet Eau du Salon.
+	chien.deposer(jouet);
+	salon.retirer(eau);
+
+	s6=salon.toString()+"\n"+chat.toString()+"\n"+chien.toString();
+	//Le test suivant doit montrer que le chien ne possède plus rien dans son inventaire, le chat possède toujours la Nourriture et la pièce Salon possède l'objet Jouet et les vivants Chat et Chien.
+	System.out.println("TEST retirer de Piece et deposer pour Vivant :\n"+s6);
+
+
+	if(chat.possede(nourr)) { //Test de possede pour un objet possédé.
+		test4="OK";
+	}
+
+	if(!(chat.possede(eau))) { //Test de possede pour un objet non possédé.
+		test4=test4+" OK";
+	}
+	System.out.println("TEST de possede pour Vivant : "+test4);
+
+
+	if(salon.contientObjet(jouet)) { //Test de contientObjet pour un objet présent dans la pièce.
+		test5="OK";
+	}
+	if(!(salon.contientObjet(eau))) { //Test de contientObjet pour un objet non présent dans la pièce.
+		test5=test5+" OK";
+	}
+	System.out.println("TEST de contientObjet pour Piece : "+test5);
+
+
+	if(salon.contientVivant(chat)&&salon.contientVivant(chien)) { //Test de contientVivant pour un vivant présent dans la pièce.
+		test6="OK";
+	} 
+	if(!(salon.contientVivant(souris))) { //Test de contientVivant pour un vivant non présent dans la pièce.
+		test6=test6+" OK";
+	}
+	System.out.println("TEST de contientVivant pour Piece : "+test6);
+
+
+	//Le vivant Chien sort de la pièce Salon et entre dans la pièce Chambre. Le vivant Souris sort de la Chambre et entre dans le Salon.
+	ch=salon.sortir(chien);
+	sou=chambre.sortir(souris);
+	salon.entrer(sou);
+	chambre.entrer(ch);
+
+	s6=salon.toString()+"\n"+chambre.toString();
+	//Le test doit montrer que la pièce Salon possède les vivants Chat et Souris tandis que la pièce Chambre possède les vivants Chien et Corps.
+	System.out.println("TEST de entrer et sortir pour Piece :\n"+s6);
+
+
+	if(!(chat.estMort())&&!(chien.estMort())) { //Test de estMort pour des vivants qui ne sont pas morts.
+		test7="OK";
+	}
+	if(corps.estMort()) { //Test de estMort pour un "Vivant" qui est mort.
+		test7=test7+" OK";
+	}
+	System.out.println("TEST de estMort pour Vivant : "+test7);
+*/
+
+		// ****** TEST du TP3 pour les Exceptions ****** //
+
+	try{ // Test pour l'exception NomDEntiteDejaUtiliseDansLeMondeException.
+		Objet jouet=new Objet("Jouet",m) {public boolean estDeplacable() {return true;}};
+		Objet jouet2=new Objet("Jouet",m) {public boolean estDeplacable() {return true;}};
+	}
+	catch(NomDEntiteDejaUtiliseDansLeMondeException e) {
+		System.err.println("Nom d'entité déjà utilisé dans le monde. 1");
+	}
+
+	try{ // Test pour l'exception ObjetAbsentDeLaPieceException.
+		Objet puzzle=new Objet("Puzzle",m) {public boolean estDeplacable() {return true;}};
+		Objet[] objets=new Objet[0];
+		Vivant[] vivants=new Vivant[0];
+		Objet puz;
+		Piece  salon=new Piece("Salon",m,objets,vivants); 
+
+		puz=salon.retirer(puzzle);
+	}
+	catch(NomDEntiteDejaUtiliseDansLeMondeException e) {
+		System.err.println("Nom d'entité déjà utilisé dans le monde. 2");
+	}
+	catch(ObjetAbsentDeLaPieceException e) {
+		System.err.println("Objet absent de la pièce. 2");
+	}
+	catch(ObjetNonDeplacableDeLaPieceException e) {
+		System.err.println("Objet non déplaçable. 2");
+	}
+
+	try{ // Test pour l'exception ObjetNonDeplacableDeLaPieceException.
+		Objet voiture=new Objet("Voiture",m) {public boolean estDeplacable() {return false;}};
+		Objet[] objets1=new Objet[0];
+		Vivant[] vivants1=new Vivant[0];
+		Objet voi;
+		Piece  chambre=new Piece("Chambre",m,objets1,vivants1); 
+
+		chambre.deposer(voiture);
+		voi=chambre.retirer(voiture);
+	}
+	catch(NomDEntiteDejaUtiliseDansLeMondeException e) {
+		System.err.println("Nom d'entité déjà utilisé dans le monde. 3");
+	}
+	catch(ObjetAbsentDeLaPieceException e) {
+		System.err.println("Objet absent de la pièce. 3");
+	}
+	catch(ObjetNonDeplacableDeLaPieceException e) {
+		System.err.println("Objet non déplaçable. 3");
+	}
+
+	try{ // Test pour l'exception ObjetNonPossedeParLeVivantException.
+		Objet crayon=new Objet("Crayon",m) {public boolean estDeplacable() {return true;}};
+		Objet[] objets2=new Objet[0];
+		Objet[] obj2=new Objet[0];
+		Vivant[] vivants2=new Vivant[0];
+		Piece  salle=new Piece("Salle",m,objets2,vivants2); 
+		Vivant chat=new Vivant("Chat",m,10,15,salle,obj2) {}; 
+
+		salle.deposer(crayon);
+		chat.deposer(crayon);
+	}
+	catch(NomDEntiteDejaUtiliseDansLeMondeException e) {
+		System.err.println("Nom d'entité déjà utilisé dans le monde. 4");
+	}
+	catch(ObjetNonPossedeParLeVivantException e) {
+		System.err.println("Objet non possédé par le vivant. 4");
+	}
+  }
+}

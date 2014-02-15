@@ -1,0 +1,44 @@
+package fr.insarouen.asi.prog.asiaventure.elements.objets;
+
+import fr.insarouen.asi.prog.asiaventure.Monde;
+import fr.insarouen.asi.prog.asiaventure.elements.Entite;
+import fr.insarouen.asi.prog.asiaventure.NomDEntiteDejaUtiliseDansLeMondeException;
+
+/**
+* Classe representant un objet.
+*
+* @author lavigne_paul
+*
+*/
+
+public abstract class Objet extends Entite{
+  private String nom;
+  private Monde monde;
+
+  //constructeur
+
+/**
+* Constructeur Objet de la classe de meme nom.
+*
+* @param _nom
+*	Le nom de l'objet a creer.
+* @param _monde
+*	Le monde auquel appartiendra l'objet.
+*
+*/
+
+  public Objet(String _nom, Monde _monde) throws NomDEntiteDejaUtiliseDansLeMondeException{
+	super(_nom,_monde);
+  }
+
+  //methodes
+
+/**
+* Methode estDeplacable de la classe Objet.
+*
+* @return Un booleen indiquant si un objet est deplaçable, par defaut Faux.
+*
+*/
+
+  public abstract boolean estDeplacable();
+}
